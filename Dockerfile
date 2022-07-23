@@ -10,6 +10,6 @@ RUN npm ci --production
 
 COPY src/ .
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD ["npm", "start"]
