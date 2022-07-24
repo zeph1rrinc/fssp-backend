@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 const ApiError = require('../error/ApiError')
 const sequelize = require('../db')
 const {md5} = require("pg/lib/utils");
-const {max} = require("pg/lib/defaults");
 
 
 const generateJWT = (payload) => {
@@ -16,7 +15,15 @@ const generateJWT = (payload) => {
 
 class AuthController {
     async getAll(req, res) {
-        const lines = await sequelize.query("SELECT * FROM users;", {type: QueryTypes.SELECT})
+        const lines = await sequelize.query(
+            "SELECT u.id, u.login, e.firstname, e.lastname, e.secondname, e.post, units.name || ' ' || units.city || ' ' || units.address as unit FROM users as u " +
+            "left join employees as e on e.id = u.id " +
+            "left join units on e.unit_id = units.id " +
+            "where u.id > 0;",
+            {
+                type: QueryTypes.SELECT
+            }
+        )
         res.json(lines)
     }
 
